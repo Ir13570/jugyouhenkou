@@ -7,26 +7,29 @@ import requests
 
 #スクレイピング------------------------------------------------------------------------------
 
-#url定義
+#url定義 ※2は持ち物連絡ページを参照しており、無印は授業変更ページを参照しています。
 url     = 'http://jyugyou.tomakomai-ct.ac.jp/jyugyou.php?class=J2' 
-url2    = 'https://kosenjp-my.sharepoint.com/personal/ir16015_tomakomai_kosen-ac_jp/_layouts/15/guestaccess.aspx?docid=10c546b28a6444cb9aca48c294451daa3&authkey=AZKRBXIQvSUc7VlXIEznZ-E'
+url2    = 'https://writening.net/page?NVznd8'
 #URLOPEN&HTML取得
 html    = urllib.request.urlopen(url).read()
 soup    = BeautifulSoup(html)
 html2   = urllib.request.urlopen(url2).read()
 soup2   = BeautifulSoup(html2)
 
-print(soup2)
 #変更情報切り抜き
 soup_sc = soup.find_all("table", width="55%", border="1", cellspacing="0", cellpadding="0", bgcolor="#FFFFFF")
+soup2_sc = soup2.find_all("div", class_="section-item")
 
 #文字列化
 soup_str    = str(soup_sc)
+soup2_str   = str(soup2_sc)
 
 #要素抜き出し
 htmlp       = re.compile(r"<[^>]*?>")
 soup_str    = htmlp.sub("", soup_str)
 soup_str    = soup_str[15:-1] + "　"
+soup2_str   = htmlp.sub("", soup2_str)
+soup2_str   = soup2_str[10:-5]
 
 #soup_str = "7月6日(火) ５・６時限目　プログラミングⅠ　→　論理回路Ⅰ　7月16日(木) １・２時限目　論理回路Ⅰ　→　プログラミングⅠ　7月6日(金) ３時限目　プログラミングⅠ　→　論理回路Ⅰ　"
 
@@ -49,8 +52,8 @@ print("変更後授業名一覧:" + str(class_list))
 #日付情報・授業データ編集-----------------------------------------------------------------------------------
 
 #日付取得
-today   = (datetime.date.today() + datetime.timedelta(days=3)).strftime("%-m/%-d")
-weekday = (datetime.date.today() + datetime.timedelta(days=3)).weekday()
+today   = (datetime.date.today() + datetime.timedelta(days=1)).strftime("%-m/%-d")
+weekday = (datetime.date.today() + datetime.timedelta(days=1)).weekday()
 
 #曜日日本語化
 if weekday == 0:
@@ -121,7 +124,7 @@ for i in day_list:
 #送信先URL（Line Notify）
 url     = "https://notify-api.line.me/api/notify"
 #送信用トークン
-token   = "H7Lhr4UvGGzxMgJKVBq9l09oOz4ls7bTISqAhn2yfX5"
+token   = "quPpCOMfd0jvzj7nOOP57BxJfdWJkzhimT7DJsImpCh"
 headers = {"Authorization" : "Bearer "+ token}
 
 #変更判定出力
@@ -140,8 +143,11 @@ for s in classes[weekday]:
     message = message + "\n " + str(i) + ":"  + s
     i += 1
 
-message = message + "\n【持ち物・課題・連絡等】\n" + soup2.string
+message = message + "\n【持ち物・課題・連絡等】\n" + soup2_str
 payload = {"message" :  message}
+
+#持ち物出力
+print("持ち物内容:" + soup2_str)
 
 #メッセージ送信
 r = requests.post(url ,headers = headers ,params=payload)
