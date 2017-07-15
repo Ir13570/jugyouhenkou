@@ -125,7 +125,7 @@ for i in day_list:
 url     = "https://notify-api.line.me/api/notify"
 #送信用トークン
 <<<<<<< HEAD
-token   = "Ar6en6ug1lb3aHKSXDlzSOgvq2GgfNUGyt2LHdARr5O" 
+token   = "***" 
 headers = {"Authorization" : "Bearer "+ token}
 
 #変更判定出力
