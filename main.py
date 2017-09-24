@@ -103,7 +103,7 @@ def main():
             today,
             config.get_url()[-2:]
             )
-
+    # print(message)
     sender.sender(message)
 
 

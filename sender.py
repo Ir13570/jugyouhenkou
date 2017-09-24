@@ -21,6 +21,7 @@ def text_gen(send_li, change, today, clasname):
             send_str += str(i) + ':' + x + '\n'
 
     send_str += '\n//連絡事項\n' + get_comment() + '\n'
+    # print(send_str)
     return send_str
 
 
@@ -55,6 +56,7 @@ def get_comment():
 
 
 def sender(message):
+    print(message)
     url = "https://notify-api.line.me/api/notify"
     token = "***"
     headers = {"Authorization": "Bearer " + token}
