@@ -1,10 +1,10 @@
 import requests
 
-#外部送信---------------------------------------------------------------
+# 外部送信---------------------------------------------------------------
 
-#送信先URL（Line Notify）
+# 送信先URL（Line Notify）
 url     = "https://notify-api.line.me/api/notify"
-#送信用トークン
+# 送信用トークン
 token   = "***"
 headers = {"Authorization" : "Bearer "+ token}
 
@@ -12,5 +12,5 @@ message = "\n今日もお疲れ様でした。\n次授業日の持ち物・提�
 payload = {"message" :  message}
 
 
-#メッセージ送信
+# メッセージ送信
 r = requests.post(url ,headers = headers ,params=payload)

@@ -42,11 +42,11 @@ def main():
     for x in change_li:
         class_li.append(re.findall('.+　→　(.+)', x))
 
-    #today = '10月3日'
-    #days_li.append([('10月3日', '火', '８')])
-    #print(days_li)
-    #class_li.append(['ぎゃぎゃ'])
-    #print(class_li)
+    # today = '10月3日'
+    # days_li.append([('10月3日', '火', '８')])
+    # print(days_li)
+    # class_li.append(['ぎゃぎゃ'])
+    # print(class_li)
     for x in days_li:
         time = x[0]
         if x[0][0] == today:
@@ -82,9 +82,9 @@ def main():
                         class_li[j][0]
                         )
                 send_li = config.fri.classes
-            #print(send_li)
+            # print(send_li)
         else:
-            #print('Not match.')
+            # print('Not match.')
             if '月' == time[1]:
                 send_li = config.mon.classes
             elif '火' == time[1]:
@@ -97,12 +97,14 @@ def main():
                 send_li = config.fri.classes
         j += 1
 
-    sender.sender(
+    message = sender.text_gen(
             send_li,
             change,
             today,
             config.get_url()[-2:]
             )
+
+    sender.sender(message)
 
 
 main()

@@ -1,15 +1,15 @@
 from bs4 import BeautifulSoup
 import urllib.request as req
+import requests
 import re
 
 
-def sender(send_li, change, today,
-        clasname):
+def text_gen(send_li, change, today, clasname):
     i = 0
     send_str = ''
-    comment = ''
 
-    send_str += 'クラス:' + clasname + '\n[' + today + get_weather() + '連絡事項]\n//授業変更情報\n'
+    send_str += 'クラス:' + clasname + '\n['
+    send_str += today + get_weather() + '連絡事項]\n//授業変更情報\n'
     if change:
         send_str += '<授業変更あり>\n'
     else:
@@ -21,11 +21,14 @@ def sender(send_li, change, today,
             send_str += str(i) + ':' + x + '\n'
 
     send_str += '\n//連絡事項\n' + get_comment() + '\n'
-    print(send_str)
+    return send_str
 
 
 def get_weather():
-    url = 'https://weather.goo.ne.jp/weather/address/01213042/'
+    url = (
+            'https://weather.goo.ne.jp/'
+            'weather/address/01213042/'
+            )
     res = req.urlopen(url)
     soup = BeautifulSoup(res, 'html.parser')
     weather = soup.select('p[class="weather"]')
@@ -36,7 +39,7 @@ def get_weather():
     tommo = tommo.replace('時々', '/')
     tommo = tommo.replace('一時', '|')
     tommo = tommo.replace('のち', '▶')
-    #print(tommo)
+
     return tommo
 
 
@@ -47,5 +50,16 @@ def get_comment():
     comment = soup.select_one('div[class="section-item"]')
     p = re.compile(r"<[^>]*?>")
     comment = re.sub(p, "", str(comment)).lstrip().rstrip()
-    #print(comment)
+    # print(comment)
     return comment
+
+
+def sender(message):
+    url = "https://notify-api.line.me/api/notify"
+    token = "***"
+    headers = {"Authorization": "Bearer " + token}
+    message = ''
+    payload = {"message": message}
+
+    r = requests.post(url, headers = headers, params = payload)
+    print(r)
